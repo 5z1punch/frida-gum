@@ -14,6 +14,10 @@
 
 G_BEGIN_DECLS
 
+extern gpointer agent_so_begin;
+extern gpointer agent_so_end;
+extern int agent_so_init_flag;
+
 #define GUM_TYPE_INTERCEPTOR (gum_interceptor_get_type ())
 G_DECLARE_FINAL_TYPE (GumInterceptor, gum_interceptor, GUM, INTERCEPTOR,
     GObject)

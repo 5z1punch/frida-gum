@@ -211,6 +211,10 @@ static GumTlsKey gum_interceptor_guard_key;
 
 static GumInvocationStack _gum_interceptor_empty_stack = { NULL, 0 };
 
+gpointer agent_so_begin;
+gpointer agent_so_end;
+int agent_so_init_flag = 0;
+
 static void
 gum_interceptor_class_init (GumInterceptorClass * klass)
 {
@@ -1182,6 +1186,13 @@ _gum_function_context_begin_invocation (GumFunctionContext * function_ctx,
 #ifdef G_OS_WIN32
   system_error = gum_thread_get_system_error ();
 #endif
+
+  if(agent_so_init_flag == 1){ 
+    if(*caller_ret_addr > agent_so_begin && *caller_ret_addr < agent_so_end){
+      *next_hop = function_ctx->on_invoke_trampoline;
+      goto bypass;
+    }
+  }
 
   if (gum_tls_key_get_value (gum_interceptor_guard_key) == interceptor)
   {
